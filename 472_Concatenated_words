@@ -1,0 +1,34 @@
+"""
+
+approcah : Go through all the words and check for each char if the substring till that
+char is present in the words,
+    --> if present --> the rest of word should be present in word
+                    --> I can recursively call to check if it is combinations of more words
+    --> if not present you continue
+
+Eg: cats  dog cats
+            i
+"""
+class Solution:
+    def findAllConcatenatedWordsInADict(self, words: List[str]) -> List[str]:
+        words = set(words) # As the finding of word from set will in O(1)
+        #SC: O(words) TC: O(30*words)
+        res = []
+        dp = {}
+        def dfs(curr): 
+            if curr in dp:
+                return dp[curr]
+            for i in range(1,len(curr)):
+                prefix = curr[:i]
+                suffix = curr[i:]
+                if prefix in words:
+                    if (suffix in words) or dfs(suffix): #two conditions for checking if the suffix is present in words or if suffix is combination of two or more words
+                        dp[curr] = True
+                        return dp[curr]
+            dp[curr] = False
+            return dp[curr]
+
+        for word in words:
+            if dfs(word):
+                res.append(word)
+        return res
